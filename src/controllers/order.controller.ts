@@ -47,7 +47,7 @@ export const createOrder = async (req: AuthRequest, res: Response, next: NextFun
 export const getOrders = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const { status } = req.query; // ej: ?status=pending
-    const filter = status ? { status } : {};
+    const filter = status ? { status: status as string } : {};
     const orders = await Order.find(filter).sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
