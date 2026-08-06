@@ -1,6 +1,5 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middlewares/auth.middleware';
-import type { FilterQuery } from 'mongoose';
 import Order, { IOrder } from '../models/Order.model';
 import Product from '../models/Product.model';
 
@@ -48,7 +47,7 @@ export const createOrder = async (req: AuthRequest, res: Response, next: NextFun
 export const getOrders = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const { status } = req.query;
-    const filter: FilterQuery<IOrder> = status ? { status: status as IOrder['status'] } : {};
+    const filter: Partial<Pick<IOrder, 'status'>> = status ? { status: status as IOrder['status'] } : {};
     const orders = await Order.find(filter).sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
