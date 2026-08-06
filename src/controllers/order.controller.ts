@@ -1,6 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middlewares/auth.middleware';
-import Order from '../models/Order.model';
+import type { FilterQuery } from 'mongoose';
+import Order, { IOrder } from '../models/Order.model';
 import Product from '../models/Product.model';
 
 // Crear un pedido (mesero)
@@ -46,8 +47,8 @@ export const createOrder = async (req: AuthRequest, res: Response, next: NextFun
 // Ver todos los pedidos (para admin, o filtrado por estado)
 export const getOrders = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const { status } = req.query; // ej: ?status=pending
-    const filter = status ? { status: status as string } : {};
+    const { status } = req.query;
+    const filter: FilterQuery<IOrder> = status ? { status: status as IOrder['status'] } : {};
     const orders = await Order.find(filter).sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
